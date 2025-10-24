@@ -18,7 +18,7 @@ class Storage:
         value,_,_=self._get_value_from_storage(key)
         return value
     
-    def delete(self,keys):
+    def delete(self,*keys):
         count=0
         for key in keys:
             if key in self.data:
@@ -27,6 +27,8 @@ class Storage:
                 del self.data[key]
                 count+=1
         return count
+    def exist(self,*keys):
+        return sum(1 for key in keys if self._is_key_valid(key))
     
 
     def _get_value_from_storage(self,key):
