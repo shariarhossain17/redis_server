@@ -7,3 +7,4 @@ class RedisServer:
     def __init__(self):
         storage=Storage()
         storage.set("ss",10)
+        print(storage.get("ss"))

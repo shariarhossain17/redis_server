@@ -4,12 +4,26 @@ class Storage:
         self.memory=0
     
     def set(self,key,value,expireTime=None):
-        if key in self.data(key):
+        if key in self.data:
             old_val,_,_=self.data[key]
             self.memory-=self._calculate_memory_usage(key,old_val)
         data_type=self._get_data_type(value)
         self.data[key]=(value,data_type,expireTime)
         self.memory+=self._calculate_memory_usage(key,value)
+      
+       
+    
+
+    def get(self,key):
+        if not self._is_key_valid(key):
+            return None
+        value,_,_=self.data[key]
+        return value
+
+    #check key is valid
+    def _is_key_valid(self,key):
+        return key in self.data
+
 
 
     #get data type
