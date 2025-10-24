@@ -59,6 +59,33 @@ class Storage:
         value,data_type,_=self._get_value_from_storage(key)
         self.data[key]=(value,data_type,timestamp)
         return True
+    
+
+    def ttl(self,key):
+        if not self._is_key_valid(key):
+            return -2
+        value,_,expiry_time=self._get_value_from_storage(key)
+        if expiry_time is None:
+            return -1
+        remaining=expiry_time-time.time()
+        if(remaining<=0):
+            self.memory-=self._calculate_memory_usage(key,value)
+            del self.data[key]
+        return int(remaining)
+    
+
+    def pttl(self,key):
+        if not self._is_key_valid(key):
+            return -2
+        value,_,expiry_time=self._get_value_from_storage(key)
+        if expiry_time is None:
+            return -1
+        remaining=expiry_time-time.time()
+        if(remaining<=0):
+            self.memory-=self._calculate_memory_usage(key,value)
+            del self.data[key]
+        return int(remaining*1000)
+
         
 
 
