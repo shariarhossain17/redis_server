@@ -1,3 +1,8 @@
+
+
+from .storage import Storage
+
+
 class RedisServer:
     def __init__(self):
-        print("hello from redis server")
+        storage=Storage()
