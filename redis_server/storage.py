@@ -1,3 +1,7 @@
+
+import fnmatch
+
+
 class Storage:
     def __init__(self):
         self.data={}
@@ -29,6 +33,12 @@ class Storage:
         return count
     def exist(self,*keys):
         return sum(1 for key in keys if self._is_key_valid(key))
+    
+    def keys(self,pattern="*"):
+        valid_keys=[key for key in self.data.keys() if self._is_key_valid(key)]
+        if pattern=="*":
+            return valid_keys
+        return [key for key in valid_keys if fnmatch.fnmatch(key,pattern)]
     
 
     def _get_value_from_storage(self,key):
