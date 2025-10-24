@@ -85,7 +85,19 @@ class Storage:
             self.memory-=self._calculate_memory_usage(key,value)
             del self.data[key]
         return int(remaining*1000)
-
+    
+    def persist(self,key):
+        if not self._is_key_valid(key):
+            return False
+        value,data_type,_=self._get_value_from_storage(key)
+        self.data[key]=(value,data_type,None)
+    
+    def get_type(self,key):
+        if not self._is_key_valid(key):
+            return False
+        _,data_type,_=self._get_value_from_storage(key)
+        return data_type
+   
         
 
 
