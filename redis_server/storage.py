@@ -1,5 +1,6 @@
 
 import fnmatch
+import time
 
 
 class Storage:
@@ -39,6 +40,20 @@ class Storage:
         if pattern=="*":
             return valid_keys
         return [key for key in valid_keys if fnmatch.fnmatch(key,pattern)]
+    
+    def flush(self):
+        self.data.clear()
+        self.memory=0
+    
+    def expire(self,key,seconds):
+        if not self._is_key_valid(key):
+            return False
+        value,data_type,_=self._get_value_from_storage(key)
+        expiry_time=time.time()+seconds
+        self.data[key]=(value,data_type,expiry_time)
+        return True
+
+
     
 
     def _get_value_from_storage(self,key):
