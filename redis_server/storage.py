@@ -1,5 +1,6 @@
 
 import fnmatch
+import random
 import time
 
 
@@ -97,13 +98,38 @@ class Storage:
             return False
         _,data_type,_=self._get_value_from_storage(key)
         return data_type
-   
-        
-
-
-
+    
+    def get_memory_usage(self):
+        return self.memory
     
 
+    def cleanup_expired_keys(self):
+        if not self.data:
+            return 0
+        
+        current_time=time.time()
+        expired_keys=[]
+
+        sample_size=min(20,len(self.data))
+        sample_keys=random.sample(list(self.data.keys()),sample_size)
+
+        for key in sample_keys:
+            value,_,time=self._get_value_from_storage(key)
+            if(time is not None and time<=current_time):
+                expired_keys.append(key)
+        
+        for key in expired_keys:
+            value,_,_=self._get_value_from_storage(key)
+            self.memory-=self._calculate_memory_usage(key,value)
+            del self.memory[key]
+        
+        return len(expired_keys)
+
+
+
+
+   
+        
     def _get_value_from_storage(self,key):
         return self.data[key]
 
