@@ -5,20 +5,32 @@ class Storage:
     
     def set(self,key,value,expireTime=None):
         if key in self.data:
-            old_val,_,_=self.data[key]
+            old_val,_,_=self._get_value_from_storage(key)
             self.memory-=self._calculate_memory_usage(key,old_val)
         data_type=self._get_data_type(value)
         self.data[key]=(value,data_type,expireTime)
         self.memory+=self._calculate_memory_usage(key,value)
       
        
-    
-
     def get(self,key):
         if not self._is_key_valid(key):
             return None
-        value,_,_=self.data[key]
+        value,_,_=self._get_value_from_storage(key)
         return value
+    
+    def delete(self,keys):
+        count=0
+        for key in keys:
+            if key in self.data:
+                value,_,_=self._get_value_from_storage(key)
+                self.memory-=self._calculate_memory_usage(key,value)
+                del self.data[key]
+                count+=1
+        return count
+    
+
+    def _get_value_from_storage(self,key):
+        return self.data[key]
 
     #check key is valid
     def _is_key_valid(self,key):
