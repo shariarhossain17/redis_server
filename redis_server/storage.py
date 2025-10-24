@@ -52,6 +52,15 @@ class Storage:
         expiry_time=time.time()+seconds
         self.data[key]=(value,data_type,expiry_time)
         return True
+    
+    def expire_at(self,key,timestamp):
+        if not self._is_key_valid(key):
+            return False
+        value,data_type,_=self._get_value_from_storage(key)
+        self.data[key]=(value,data_type,timestamp)
+        return True
+        
+
 
 
     
