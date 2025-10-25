@@ -11,6 +11,7 @@ class CommandHandler:
             "PING":self.ping,
             "ECHO":self.echo,
             "SET":self.set,
+            "GET":self.get,
         }
 
     def execute(self,command,*args):
@@ -46,7 +47,8 @@ class CommandHandler:
             
             self.storage.set(key,value,expiry_time)
             return ok()
-
+        
+      
 
 
 
