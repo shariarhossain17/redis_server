@@ -7,16 +7,26 @@ class CommandHandler:
     def __init__(self,storage):
         self.storage=storage
         self.command_count=0
-        self.commands={
-            "PING":self.ping,
-            "ECHO":self.echo,
-            "SET":self.set,
-            "GET":self.get,
+        self.commands = {
+            "PING": self.ping,
+            "ECHO": self.echo,
+            "SET": self.set,
+            "GET": self.get,
+            "DEL": self.delete,
+            "EXISTS": self.exists,
+            "KEYS": self.keys,
+            "FLUSHALL": self.flushall,
+            "EXPIRE": self.expire,
+            "EXPIREAT": self.expireat,
+            "TTL": self.ttl,
+            "PTTL": self.pttl,
+            "PERSIST": self.persist,
+            "TYPE": self.get_type,
+            "INFO": self.info,
         }
 
     def execute(self,command,*args):
         cmd=self.commands.get(command.upper())
-        print(cmd)
         if cmd:
             return cmd(*args)
         return error(f"unknown command '{command}'")
@@ -45,10 +55,15 @@ class CommandHandler:
             except ValueError:
                 return error("invalid expire time in 'set' ")
             
-            self.storage.set(key,value,expiry_time)
-            return ok()
+        self.storage.set(key,value,expiry_time)
+        return ok()
         
-      
+
+    def get(self,*args):
+        if len(args) !=1:
+            return error("wrong command for get")
+
+        return bulk_string(self.storage.get(args[0]))  
 
     def delete(self, *args):
         if not args:

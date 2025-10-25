@@ -14,14 +14,17 @@ class Storage:
             old_val,_,_=self._get_value_from_storage(key)
             self.memory-=self._calculate_memory_usage(key,old_val)
         data_type=self._get_data_type(value)
+        print(key,value,data_type,expireTime)
         self.data[key]=(value,data_type,expireTime)
         self.memory+=self._calculate_memory_usage(key,value)
       
        
     def get(self,key):
+        print(key)
+        print(self.data)
         if not self._is_key_valid(key):
             return None
-        value,_,_=self._get_value_from_storage(key)
+        value,_,_=self.data[key]
         return value
     
     def delete(self,*keys):
@@ -33,7 +36,7 @@ class Storage:
                 del self.data[key]
                 count+=1
         return count
-    def exist(self,*keys):
+    def exists(self,*keys):
         return sum(1 for key in keys if self._is_key_valid(key))
     
     def keys(self,pattern="*"):
@@ -114,8 +117,8 @@ class Storage:
         sample_keys=random.sample(list(self.data.keys()),sample_size)
 
         for key in sample_keys:
-            value,_,time=self._get_value_from_storage(key)
-            if(time is not None and time<=current_time):
+            value,_,expire_time=self._get_value_from_storage(key)
+            if(expire_time is not None and expire_time<=current_time):
                 expired_keys.append(key)
         
         for key in expired_keys:
