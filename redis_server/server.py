@@ -3,11 +3,12 @@ import socket
 import time
 
 from .command import CommandHandler
+from .persistence import PersisTenceConfig
 from .storage import Storage
 
 
 class RedisServer:
-    def __init__(self,host="localhost",port=6379):
+    def __init__(self,host="localhost",port=6379,persistenceConfig=None):
         self.host=host
         self.port=(port)
         self.running=False
@@ -17,6 +18,8 @@ class RedisServer:
         self.cleanup_interval=0.1
         self.storage=Storage()
         self.commandHandler=CommandHandler(self.storage)
+
+        self.persistence_config=persistenceConfig or PersisTenceConfig()
 
     def start(self):
         self.server_socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
